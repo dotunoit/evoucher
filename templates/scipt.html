@@ -1,0 +1,97 @@
+
+
+    </style>
+
+    <script>
+        // Confirmation for top-up
+        function confirmTopUp() {
+            var topUpAmount = document.querySelector('input[name="top_up_amount"]').value;
+            if (!topUpAmount) {
+                alert('Please enter a valid top-up amount.');
+                return false;
+            }
+            return confirm('Are you sure you want to top-up this voucher?');
+        }
+
+        // Confirmation for remove voucher
+        function confirmRemoveVoucher() {
+            return confirm('Are you sure you want to remove this voucher? This action cannot be undone.');
+        }
+
+        // Show admin password input when deleting vendor or event
+        function confirmDelete(actionType) {
+            var passwordGroup = document.querySelector('.password-group');
+            var confirmationMessage = '';
+
+            if (actionType === 'delete_vendor') {
+                confirmationMessage = 'Are you sure you want to delete this vendor? This action requires admin authentication.';
+            } else if (actionType === 'delete_event') {
+                confirmationMessage = 'Are you sure you want to delete this event? This action requires admin authentication.';
+            }
+
+            if (confirm(confirmationMessage)) {
+                passwordGroup.style.display = 'flex'; // Show password input field
+            } else {
+                return false; // Prevent form submission if not confirmed
+            }
+        }
+
+        // Ensure the admin password is entered before submission
+        function checkPassword() {
+            var passwordInput = document.querySelector('input[name="admin_password"]').value;
+            if (!passwordInput) {
+                alert('Please enter the admin password to proceed.');
+                return false;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Vouchers, Events, and Vendors</h1>
+
+        <!-- Voucher Form -->
+        <form method="POST" action="{{ url_for('manage_vouchers') }}">
+            <select name="voucher_id" required>
+                <option value="" disabled selected>Select Voucher</option>
+                {% for voucher in vouchers %}
+                <option value="{{ voucher.voucher_id }}">{{ voucher.voucher_name }} - {{ voucher.email }} - Balance: ${{ voucher.balance }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="number" name="top_up_amount" step="0.01" placeholder="Top-Up Amount (Optional)">
+            
+            <div class="button-group">
+                <button type="submit" name="action" value="top_up" onclick="return confirmTopUp()">Top Up</button>
+                <button type="submit" name="action" value="remove" onclick="return confirmRemoveVoucher()">Remove Voucher</button>
+            </div>
+        </form>
+
+        <!-- Delete Vendor and Event Form -->
+        <form method="POST" action="{{ url_for('delete_action') }}" onsubmit="return checkPassword()">
+            <select name="event_or_vendor_id" required>
+                <option value="" disabled selected>Select Vendor or Event</option>
+                {% for event in events %}
+                <option value="{{ event.event_id }}">Event: {{ event.event_name }}</option>
+                {% endfor %}
+                {% for vendor in vendors %}
+                <option value="{{ vendor.vendor_id }}">Vendor: {{ vendor.vendor_name }} - {{ vendor.email }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="button-group">
+                <button type="submit" name="action" value="delete_vendor" onclick="confirmDelete('delete_vendor')">Delete Vendor</button>
+                <button type="submit" name="action" value="delete_event" onclick="confirmDelete('delete_event')">Delete Event</button>
+            </div>
+
+            <div class="password-group">
+                <label for="admin_password">Enter Admin Password:</label>
+                <input type="password" name="admin_password" placeholder="Admin Password" required>
+            </div>
+        </form>
+
+        <a href="{{ url_for('admin_dash') }}" class="back-link">Back to Dashboard</a>
+    </div>
+</body>
+</html>

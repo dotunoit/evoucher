@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Vendor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('{{ url_for('static', filename='background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #6a0dad;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            text-align: left;
+            color: #333;
+        }
+
+        input, button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        button {
+            background-color: #6a0dad;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #6a0dad;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Vendor to Event</h1>
+        
+        <form method="POST">
+            <label for="vendor_name">Vendor Name:</label>
+            <input type="text" name="vendor_name" required>
+
+            <label for="vendor_email">Vendor Email:</label>
+            <input type="email" name="vendor_email" required>
+
+            <label for="vendor_phone">Vendor Phone:</label>
+            <input type="text" name="vendor_phone" required>
+
+            <button type="submit">Add Vendor</button>
+        </form>
+
+        <a href="{{ url_for('admin_dash') }}">Back to Dashboard</a>
+    </div>
+</body>
+</html>

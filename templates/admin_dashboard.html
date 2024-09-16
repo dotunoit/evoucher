@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        function confirmRemove() {
+            return confirm('Are you sure you want to remove this vendor? This action cannot be undone.');
+        }
+
+        function confirmRemoveEvent() {
+            var adminPassword = prompt("Please enter the admin password to confirm event removal:");
+            if (adminPassword === 'adminpassword') { // Replace with a more secure check
+                return true;
+            } else {
+                alert('Invalid password. Event not removed.');
+                return false;
+            }
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - VoucherVault</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('{{ url_for('static', filename='background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Increased transparency */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            flex-grow: 1;
+            margin-top: 50px; /* Adjust the vertical position */
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #6a0dad;
+        }
+
+        /* Event table and vendor list styling */
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+
+        /* Vendor list style with color alternating */
+        .vendor-list {
+            margin-top: 15px;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+
+        .vendor-list h4 {
+            margin-bottom: 10px;
+            color: #4b0082;
+        }
+
+        .vendor-item {
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .vendor-item:nth-child(even) {
+            background-color: #f0f0f0;
+        }
+
+        .vendor-item:nth-child(odd) {
+            background-color: #e0e0e0;
+        }
+
+        /* Button styling for actions, compact and uniform size */
+        .actions-btn, .voucher-btns button {
+            padding: 6px 16px;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        /* Remove vendor (X) button styling */
+        .remove-vendor {
+            color: red;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        /* Remove event button */
+        .remove-event-btn {
+            padding: 6px 16px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
+
+        /* Dropdown toggle button */
+        .dropbtn {
+            padding: 6px 16px;
+            background-color: #6a0dad;
+            color: white;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        /* Voucher management buttons */
+        .voucher-btns {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Dropdown container */
+        .dropdown-content {
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* Visible class to show content */
+        .dropdown-content.active {
+            display: block;
+        }
+
+        /* Logout link */
+        .logout-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #6a0dad;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .logout-link:hover {
+            background-color: #4b0082;
+        }
+    </style>
+
+    <script>
+        // Toggle dropdown visibility for event
+        function toggleDropdown(eventId) {
+            var dropdownContent = document.getElementById('vendor-list-' + eventId);
+            dropdownContent.classList.toggle('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Dashboard</h1>
+
+        <!-- Flash messages should be placed here at the top -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Event Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event['event_name'] }}</td>
+                    <td>25th DEC 2025</td> <!-- Event date hardcoded -->
+                    <td>
+                        <button class="actions-btn" onclick="window.location.href='{{ url_for('add_vendor', event_id=event['event_id']) }}'">Add Vendor</button>
+                        <button class="dropbtn" onclick="toggleDropdown('{{ event.event_id }}')">Toggle Vendors</button>
+                        <form method="POST" action="{{ url_for('remove_event', event_id=event['event_id']) }}" style="display:inline;">
+                            <button type="submit" class="remove-event-btn" onclick="return confirmRemoveEvent()">Remove Event</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <div id="vendor-list-{{ event.event_id }}" class="dropdown-content">
+                            <h4>Vendors for {{ event['event_name'] }}</h4>
+                            {% if event_vendors[event['event_id']] %}
+                                {% for vendor in event_vendors[event['event_id']] %}
+                                <div class="vendor-item">
+                                    <p>{{ vendor['vendor_name'] }} - {{ vendor['email'] }}</p>
+                                    <a href="{{ url_for('view_sales', vendor_id=vendor['vendor_id']) }}" class="actions-btn">View Sales</a>
+
+                                    <form method="POST" action="{{ url_for('remove_vendor', vendor_id=vendor['vendor_id']) }}" style="display:inline;">
+                                        <button type="submit" class="remove-vendor" onclick="return confirmRemove()">X</button>
+                                    </form>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No vendors added yet.</p>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Event creation and voucher management buttons beside each other -->
+        <div class="voucher-btns">
+            <button onclick="window.location.href='{{ url_for('create_voucher') }}'">Create Voucher</button>
+            <button onclick="window.location.href='{{ url_for('manage_vouchers') }}'">Manage Vouchers</button>
+            <button onclick="window.location.href='{{ url_for('create_event') }}'">Create Event</button>
+        </div>
+    </div>
+
+    <!-- Logout link -->
+    <a href="{{ url_for('admin_logout') }}" class="logout-link">Logout</a>
+
+</body>
+</html>

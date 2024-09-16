@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Sales - {{ vendor['vendor_name'] }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #6a0dad;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+
+        tfoot {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sales for {{ vendor['vendor_name'] }}</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Voucher ID</th>
+                <th>Sale Amount</th>
+                <th>Sale Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if sales %}
+                {% for sale in sales %}
+                <tr>
+                    <td>{{ sale.voucher_id }}</td>
+                    <td>£{{ sale.sale_amount }}</td>
+                    <td>{{ sale.sale_date }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">No sales found for this vendor.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total Sales: {{ total_sales }}</td>
+                <td>Total Amount: £{{ total_sales_amount }}</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <a href="{{ url_for('admin_dash') }}">Back to Dashboard</a>
+</body>
+</html>

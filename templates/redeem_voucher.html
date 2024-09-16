@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redeem Voucher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('{{ url_for('static', filename='background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #6a0dad;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: center; /* Centralizing form elements */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            text-align: center; /* Centering labels */
+        }
+
+        .balance-display {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center; /* Centering text input */
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .btn-group button {
+            width: 48%;
+            margin-top: 10px;
+        }
+
+        .message {
+            margin-top: 10px;
+            color: red;
+        }
+    </style>
+
+    <script>
+        // JavaScript confirmation function
+        function confirmDeduction() {
+            return confirm("Are you sure you want to deduct the specified amount?");
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Redeem Voucher</h1>
+        
+        <!-- Display the current voucher balance -->
+        <div class="form-group">
+            <label for="voucher_balance">Voucher Balance:</label>
+            <div class="balance-display">{{ voucher_balance }}</div> <!-- Balance displayed as plain text -->
+        </div>
+
+        <!-- Input for deduction amount -->
+        <form action="{{ url_for('redeem_voucher', voucher_id=voucher_id) }}" method="POST" onsubmit="return confirmDeduction()">
+            <div class="form-group">
+                <label for="deduction_amount">Enter Deduction Amount:</label>
+                <input type="number" step="0.01" id="deduction_amount" name="deduction_amount" required>
+            </div>
+            
+            <!-- Confirmation buttons (Yes/No) -->
+            <div class="btn-group">
+                <button type="submit" class="btn">Yes, Deduct</button>
+                <button type="button" class="btn" onclick="window.history.back()">No, Cancel</button>
+            </div>
+        </form>
+        
+    </div>
+</body>
+</html>

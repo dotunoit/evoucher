@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Voucher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('{{ url_for('static', filename='background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #6a0dad;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Voucher</h1>
+        <form method="POST" action="{{ url_for('create_voucher') }}">
+            <div class="form-group">
+                <label for="new_voucher_name">Voucher Name:</label>
+                <input type="text" name="new_voucher_name" placeholder="Enter voucher name" required>
+            </div>
+            <div class="form-group">
+                <label for="new_voucher_email">Customer Email:</label>
+                <input type="email" name="new_voucher_email" placeholder="Enter customer email" required>
+            </div>
+            <div class="form-group">
+                <label for="new_voucher_amount">Voucher Amount:</label>
+                <input type="number" step="0.01" name="new_voucher_amount" placeholder="Enter voucher amount" required>
+            </div>
+            <button type="submit">Create Voucher</button>
+        </form>
+
+        <a href="{{ url_for('admin_dash') }}" class="back-link">Back to Dashboard</a>
+
+<style>
+    .back-link {
+        font-size: 12px;  /* Set the font size to make the text smaller */
+        color: #333;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;  /* Add underline on hover for emphasis */
+    }
+</style>
+
+    </div>
+</body>
+</html>

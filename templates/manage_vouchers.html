@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Vouchers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('{{ url_for('static', filename='background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #6a0dad;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6a0dad;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #4b0082;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #6a0dad;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        // Confirmation for top-up
+        function confirmTopUp() {
+            var topUpAmount = document.querySelector('input[name="top_up_amount"]').value;
+            if (!topUpAmount) {
+                alert('Please enter a valid top-up amount.');
+                return false;
+            }
+            return confirm('Are you sure you want to top-up this voucher?');
+        }
+
+        // Confirmation for remove
+        function confirmRemove() {
+            return confirm('Are you sure you want to remove this voucher? This action cannot be undone.');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage Vouchers</h1>
+
+        <form method="POST" action="{{ url_for('manage_vouchers') }}">
+            <select name="voucher_id" required>
+                <option value="" disabled selected>Select Voucher</option>
+                {% for voucher in vouchers %}
+                <option value="{{ voucher.voucher_id }}">{{ voucher.voucher_name }} - {{ voucher.email }} - Balance: ${{ voucher.balance }}</option>
+                {% endfor %}
+            </select>
+
+            <input type="number" name="top_up_amount" step="0.01" placeholder="Top-Up Amount (Optional)">
+            
+            <div class="button-group">
+                <button type="submit" name="action" value="top_up" onclick="return confirmTopUp()">Top Up</button>
+                <button type="submit" name="action" value="remove" onclick="return confirmRemove()">Remove</button>
+            </div>
+        </form>
+
+        <a href="{{ url_for('admin_dash') }}" class="back-link">Back to Dashboard</a>
+    </div>
+</body>
+</html>

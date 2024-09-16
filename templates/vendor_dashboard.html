@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('{{ url_for('static', filename='background.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #6a0dad;
+        }
+
+        .vendor-info {
+            margin-bottom: 20px;
+        }
+
+        .sales-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sales-table th, .sales-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .sales-row {
+            background-color: rgba(106, 13, 173, 0.1);  /* Default light shade */
+        }
+
+        .sales-row:nth-child(even) {
+            background-color: rgba(106, 13, 173, 0.2);  /* Slightly darker shade */
+        }
+
+        .sales-row:nth-child(odd) {
+            background-color: rgba(106, 13, 173, 0.05); /* Slightly lighter shade */
+        }
+
+        .totals {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #6a0dad;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vendor Dashboard</h1>
+
+        <!-- Display vendor name and email -->
+        <div class="vendor-info">
+            <p><strong>Vendor Name:</strong> {{ vendor.vendor_name }}</p>
+            <p><strong>Email:</strong> {{ vendor.email }}</p>
+        </div>
+
+        <h2>Your Sales</h2>
+        <!-- Display vendor's sales in a table with alternating row colors -->
+        <table class="sales-table">
+            <thead>
+                <tr>
+                    <th>Sale ID</th>
+                    <th>Voucher ID</th>
+                    <th>Sale Amount</th>
+                    <th>Sale Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if sales %}
+                    {% for sale in sales %}
+                    <tr class="sales-row">
+                        <td>{{ sale.sale_id }}</td>
+                        <td>{{ sale.voucher_id }}</td>
+                        <td>£{{ sale.sale_amount }}</td>
+                        <td>{{ sale.sale_date }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">No sales found for this vendor.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        
+        <!-- Display total sales and total sales amount -->
+        <div class="totals">
+            <p><strong>Total Sales:</strong> {{ total_sales }}</p>
+            <p><strong>Total Sales Amount:</strong> £{{ total_sales_amount }}</p>
+        </div>
+        
+    </div>
+</body>
+</html>
